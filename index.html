@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang=ru>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Вопросы и предложения</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+        * {
+            margin: 0;
+            pading: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            color: var(--tg-theme-text-color);
+            background: var(tg-theme-bg-color);
+        }
+
+        #main {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 10px;
+        }
+
+        img {
+            width: 70px;
+            margin: 30px auto;
+        }
+
+        p {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        button {
+            border: 0;
+            border-radius: 5px;
+            margin-top: 50px;
+            height: 60px;
+            widht: 200px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 50ms ease;
+            color: var(tg--theme-button-color);
+            background: var(tg--theme-button-text-color);
+        }
+
+        button:hover {
+            backgroun: var(tg--theme-seconadary-bg-color)
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h1>Онлайн магазин</h1>
+        <img src="https://ucare.timepad.ru/7e2bba4f-4b46-4b23-b06d-c7c8129f1eee/poster_event_1384343.jpg">
+        <p>Когда вы нажмёте кнопку "Начать", перед вами будет меню, в которое вы будете должны ввести данные, которые вас попросят. Неправильное написание данных - карается невыполнением вашей просьбы! </p>
+        <button id="Отправить">Начать</button>
+    </div>
+    <form id="form">
+        <input type="text" placeholder="Телеграм юзер" id="user_username">
+        <input type="text" placeholder="Вопрос или предложение" id="user_text">
+        <div id="error"></div>
+        <button type="order">Отправить</button>
+    </form>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        let tg = window.Telegram.WebApp;
+        let buy = document.getElementById("buy")
+        let order = document.getElementById("order")
+        tg.expand();
+
+        buy.addEventListener("click", () => {
+            document.getElementById("error").innerText = '';
+            document.getElementById("main").style.display = "none";
+            document.getElementById("form").style.display = "block";
+            document.getElementById("user_username").value = tg.initDataUnsafe.user.first_name + " " + tg.initDataUnsafe.user.username;
+        });
+
+        order.addEventListener("click", () => {
+            let user = document.getElementById("user_username").value;
+            let text = document.getElementById("user_text").value
+            if(user.length < 5) {
+                document.getElementById("error").innerText = 'Ошибка в юзере!';
+                return;
+            }
+            if(text.length < 10) {
+                document.getElementById("error").innerText = 'Ошибка в тексте!';
+                return;
+            }
+
+            let data = {
+                user: user,
+                text: text
+            }
+            tg.sendData(JSON.stringify(data));
+
+            tg.close();
+        });
+    </script>
+</body>
+</html>
